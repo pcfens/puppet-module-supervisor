@@ -126,6 +126,7 @@ class supervisor(
   $supervisor_environment   = undef,
   $identifier               = undef,
   $recurse_config_dir       = false,
+  $conf_file                = $supervisor::params::conf_file,
   $conf_dir                 = $supervisor::params::conf_dir,
   $conf_ext                 = $supervisor::params::conf_ext,
   $include_files            = []
@@ -187,7 +188,7 @@ class supervisor(
     require => Package[$supervisor::params::package],
   }
 
-  file { $supervisor::params::conf_file:
+  file { $conf_file:
     ensure  => $file_ensure,
     content => template('supervisor/supervisord.conf.erb'),
     require => File[$conf_dir],
@@ -206,6 +207,6 @@ class supervisor(
     ensure     => $service_ensure_real,
     enable     => $service_enable,
     hasrestart => true,
-    require    => File[$supervisor::params::conf_file],
+    require    => File[$conf_file],
   }
 }
