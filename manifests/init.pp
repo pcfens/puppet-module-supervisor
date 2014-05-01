@@ -7,6 +7,10 @@
 #     Ensure if present or absent.
 #     Default: present
 #
+#   [*package_provider*]
+#     Which provider to use for installing the package
+#     Default: system default
+#
 #   [*autoupgrade*]
 #     Upgrade package automatically, if there is a newer version.
 #     Default: false
@@ -105,6 +109,7 @@
 #
 class supervisor(
   $ensure                   = 'present',
+  $package_provider         = undef,
   $autoupgrade              = false,
   $service_ensure           = 'running',
   $service_enable           = true,
@@ -167,7 +172,8 @@ class supervisor(
 
   if ! defined(Package[$supervisor::params::package]) {
     package { $supervisor::params::package:
-      ensure => $package_ensure,
+      ensure   => $package_ensure,
+      provider => $package_provider,
     }
   }
 
